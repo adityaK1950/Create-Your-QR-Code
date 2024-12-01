@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Title -->
+    <div class="cssanimation doorCloseFromLeft title">
+        Create Your QR Code
+    </div>
+    
+    <div class="container">
+        <!-- QR Code Generator Section -->
+        <div class="section">
+            <h1>QR Code Generator</h1>
+            <form action="/generate" method="post">
+                <div class="form-group">
+                    <label for="text">Enter Text/URL:</label>
+                    <input type="text" id="text" name="text" placeholder="Enter text or URL" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">QR Code Name:</label>
+                    <input type="text" id="name" name="name" placeholder="File name for QR Code" required>
+                </div>
+                <div class="form-group">
+                    <label for="size">QR Code Size (1-40):</label>
+                    <input type="number" id="size" name="size" min="1" max="40" value="5" required>
+                </div>
+                <button type="submit">Generate QR Code</button>
+            </form>
+
+            {% if qr_code %}
+            <!-- Display Generated QR Code -->
+            <div class="result">
+                <h2>Your QR Code:</h2>
+                <img src="{{ qr_code }}" alt="Generated QR Code">
+                <a href="{{ qr_code }}" class="download-btn" download>Download QR Code</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Template Selection Section -->
+        {% if qr_code %}
+        <div class="section">
+            <h2>Choose a Template:</h2>
+            <form action="/finalize" method="post">
+                <input type="hidden" name="qr_code_name" value="{{ qr_code_name }}">
+                <div class="template-container">
+                    <div class="column">
+                        <!-- First 3 templates -->
+                        {% for template in templates[:3] %}
+                        <button type="submit" name="template" value="{{ template }}" class="template-button">
+                            <img src="{{ url_for('static', filename='qr_templates/' + template) }}" alt="{{ template }}">
+                        </button>
+                        {% endfor %}
+                    </div>
+                    <div class="column">
+                        <!-- Last 3 templates -->
+                        {% for template in templates[3:] %}
+                        <button type="submit" name="template" value="{{ template }}" class="template-button">
+                            <img src="{{ url_for('static', filename='qr_templates/' + template) }}" alt="{{ template }}">
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Final Image Section -->
+        {% if final_code %}
+        <div class="result">
+            <h2>Final Image with Template:</h2>
+            <img src="{{ final_code }}" alt="Final QR Code">
+            <a href="{{ final_code }}" class="download-btn" download>Download Final QR Code</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <div>
+            <span>Created with ❤️ by <strong>Aditya Kakade</strong></span>
+        </div>
+        <div>
+            <a href="https://github.com/adityaK1950" target="_blank" class="footer-link">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/adityak1950/" target="_blank" class="footer-link">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+            <a href="mailto:adityakakade142@gmail.com" class="footer-link">
+                <i class="fas fa-envelope"></i> Email Me
+            </a>
+        </div>
+        <div>
+            © 2024 Aditya Kakade. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>
